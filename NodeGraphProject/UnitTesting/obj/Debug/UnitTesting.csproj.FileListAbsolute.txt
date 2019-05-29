@@ -1,0 +1,12 @@
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\UnitTesting.dll
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\UnitTesting.pdb
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\Node.dll
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\nunit.framework.dll
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\Node.pdb
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\nunit.framework.pdb
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\bin\Debug\nunit.framework.xml
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\obj\Debug\UnitTesting.csprojAssemblyReference.cache
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\obj\Debug\UnitTesting.csproj.CoreCompileInputs.cache
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\obj\Debug\UnitTesting.csproj.CopyComplete
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\obj\Debug\UnitTesting.dll
+D:\Random\LCC\CS260\Lab8\NodeGraphProject\UnitTesting\obj\Debug\UnitTesting.pdb
