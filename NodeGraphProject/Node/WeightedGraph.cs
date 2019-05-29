@@ -14,8 +14,9 @@ namespace NodeGraphLibrary
         private int numNodes = 0;
         private Node[] nodeArray;
         private List<Edge> graphEdgeList;
-        private bool[,] edgeMatrix;
+        private int[,] edgeMatrix;
 
+        //array holes vars
         private Stack<int> holeIndexStack;
         private bool nodeArrayHasHoles;
 
@@ -25,7 +26,7 @@ namespace NodeGraphLibrary
             this.graphEdgeList = new List<Edge>();
             this.nodeArray = new Node[defaultSize];
             this.holeIndexStack = new Stack<int>();
-            edgeMatrix = new bool[defaultSize, defaultSize];
+            edgeMatrix = new int[defaultSize, defaultSize];
         }
 
         //Public Methods
@@ -104,7 +105,7 @@ namespace NodeGraphLibrary
             }
         }
 
-        public bool AddEdge(string startingName, string endingName)
+        public bool AddEdge(string startingName, string endingName, int weight = 0)
         {
             //if the user is bad and makes a circular path from a node to itself
             if (startingName == endingName)
@@ -122,13 +123,13 @@ namespace NodeGraphLibrary
                 DoubleMatrixArray();
             }
 
-            //set links in edgeMatrix
-            edgeMatrix[startingIndex, endingIndex] = true;
-            edgeMatrix[endingIndex, startingIndex] = true;
-
             //making new edges
-            Edge firstNodeEdge = new Edge(endingIndex);
-            Edge secondNodeEdge = new Edge(startingIndex);
+            Edge firstNodeEdge = new Edge(endingIndex,weight);
+            Edge secondNodeEdge = new Edge(startingIndex,weight);
+
+            //set links in edgeMatrix
+            edgeMatrix[startingIndex, endingIndex] = firstNodeEdge.Weight;
+            edgeMatrix[endingIndex, startingIndex] = secondNodeEdge.Weight;
 
             //Adding new edges to their respective nodes
             nodeArray[startingIndex].AddEdge(firstNodeEdge);
@@ -154,8 +155,8 @@ namespace NodeGraphLibrary
                 return false;
 
             //set links in edgeMatrix to false
-            edgeMatrix[startingIndex, endingIndex] = false;
-            edgeMatrix[endingIndex, startingIndex] = false;
+            edgeMatrix[startingIndex, endingIndex] = -1;
+            edgeMatrix[endingIndex, startingIndex] = -1;
 
             //making new edges
             Edge firstNodeEdge = new Edge(endingIndex);
@@ -257,6 +258,72 @@ namespace NodeGraphLibrary
             }
         }
 
+        public string MinimumCostTraversal(string name)
+        {
+            List<Edge> minSpanQueue;
+            //validate
+            if (name != "")
+            {
+                //get the current node's edges, store edges in PQueue
+                //past current edge and local edge list into private sorting method
+                    //delete the edge with the highest weight that has the same endpoint
+                //putting the first node's edges on priority queue
+                minSpanQueue = new List<Edge>();
+                string outputStream = "";
+                int nodeLocationIndex = FindNode(name);
+                Node current = nodeArray[nodeLocationIndex];
+                if (nodeLocationIndex != -1)
+                {
+                    while(minSpanQueue.Count != 0)
+                    {
+                        current.Visited = true;
+                        Edge currentNodeEdges = current.GetEdges;
+                        while (currentNodeEdges != null)
+                        {
+                            minSpanQueue.Add(currentNodeEdges);
+                            currentNodeEdges = currentNodeEdges.Next;
+                        }
+                        Edge shortestEdge = GetRemoveShortestEdge(ref minSpanQueue);
+                        current = nodeArray[shortestEdge.EndPoint];
+                        while (currentNodeEdges != null)
+                        {
+                            int currentEndpoint = currentNodeEdges.EndPoint;
+                            if (nodeArray[currentEndpoint].Visited != true)
+                            {
+                                for(int i = 0; i < minSpanQueue.Count; i++)
+                                {
+                                    if(minSpanQueue[i].EndPoint == currentEndpoint)
+                                    {
+                                        int currentWeight = currentNodeEdges.Weight;
+                                        if (minSpanQueue[i].Weight > currentWeight)
+                                        {
+                                            minSpanQueue.Remove(minSpanQueue[i]);
+                                            minSpanQueue.Add(currentNodeEdges);
+                                        }
+                                    }
+                                    nodeArray[currentEndpoint].Visited = true;
+                                }
+                            }
+                        }
+                        ResetFalse();
+                    }
+                    for(int i = 0; i < minSpanQueue.Count; i++)
+                    {
+                        outputStream += minSpanQueue[i];
+                    }
+                    return outputStream;
+                }
+                else
+                {
+                    throw new ArgumentException("Please enter a valid graph node identifier");
+                }
+            }
+            else
+            {
+                throw new ArgumentException("Please input a valid non-empty arguement");
+            }
+        }
+
         public string DisplayMatrix()
         {
             string buffer = "";
@@ -338,21 +405,35 @@ namespace NodeGraphLibrary
             return -1;
         }
 
+        private Edge GetRemoveShortestEdge(ref List<Edge> edgeQueue)
+        {
+            Edge shortestEdge = edgeQueue[0];
+            for (int i = 0; i < edgeQueue.Count; i++)
+            {
+                if (edgeQueue[i].Weight < shortestEdge.Weight)
+                {
+                    shortestEdge = edgeQueue[i];
+                }
+            }
+            edgeQueue.Remove(shortestEdge);
+            return shortestEdge;
+        }
+
         private void RemoveFromMatrix(int nodeIndex)
         {
             //search on both axis for any edge connections between the specified node
             for(int i = 0; i < numNodes; i++)
             {
-                if(edgeMatrix[nodeIndex,i] == true)
+                if(edgeMatrix[nodeIndex,i] != -1)
                 {
-                    edgeMatrix[nodeIndex, i] = false;
+                    edgeMatrix[nodeIndex, i] = -1;
                 }
             }
             for (int j = 0; j < numNodes; j++)
             {
-                if (edgeMatrix[j,nodeIndex] == true)
+                if (edgeMatrix[j,nodeIndex] != -1)
                 {
-                    edgeMatrix[j, nodeIndex] = false;
+                    edgeMatrix[j, nodeIndex] = -1;
                 }
             }
         }
@@ -394,7 +475,7 @@ namespace NodeGraphLibrary
                 //stop when iterator reaches the end of old column size
                 //iterate row counter and repeat until done
             int newSize = (size * 2);
-            bool[,] newEdgeMatrix = new bool[newSize, newSize];
+            int[,] newEdgeMatrix = new int[newSize, newSize];
             for(int i = 0; i < size; i++)
             {
                 for(int j = 0; j < size; i++)
