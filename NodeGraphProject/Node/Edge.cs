@@ -4,12 +4,14 @@
     {
         //class fields
         private int endIndex;
+        private int startIndex;
         private Edge next;
         int weight;
         
         //constructor
-        public Edge(int endIndex, int weight = 0)
+        public Edge(int startIndex,int endIndex, int weight = 0)
         {
+            this.startIndex = startIndex;
             this.endIndex = endIndex;
             this.weight = weight;
         }
@@ -24,6 +26,18 @@
             set
             {
                 this.endIndex = value;
+            }
+        }
+
+        public int StartIndex
+        {
+            get
+            {
+                return this.startIndex;
+            }
+            set
+            {
+                this.startIndex = value;
             }
         }
 

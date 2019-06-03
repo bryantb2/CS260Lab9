@@ -124,8 +124,8 @@ namespace NodeGraphLibrary
             }
 
             //making new edges
-            Edge firstNodeEdge = new Edge(endingIndex,weight);
-            Edge secondNodeEdge = new Edge(startingIndex,weight);
+            Edge firstNodeEdge = new Edge(startingIndex, endingIndex,weight);
+            Edge secondNodeEdge = new Edge(endingIndex, startingIndex, weight);
 
             //set links in edgeMatrix
             edgeMatrix[startingIndex, endingIndex] = firstNodeEdge.Weight;
@@ -159,8 +159,8 @@ namespace NodeGraphLibrary
             edgeMatrix[endingIndex, startingIndex] = -1;
 
             //making new edges
-            Edge firstNodeEdge = new Edge(endingIndex);
-            Edge secondNodeEdge = new Edge(startingIndex);
+            Edge firstNodeEdge = new Edge(startingIndex, endingIndex);
+            Edge secondNodeEdge = new Edge(endingIndex, startingIndex);
 
             //Adding new edges to their respective nodes
             nodeArray[startingIndex].RemoveEdge(firstNodeEdge);
@@ -269,48 +269,61 @@ namespace NodeGraphLibrary
                     //delete the edge with the highest weight that has the same endpoint
                 //putting the first node's edges on priority queue
                 minSpanQueue = new List<Edge>();
-                string outputStream = "";
-                int nodeLocationIndex = FindNode(name);
-                Node current = nodeArray[nodeLocationIndex];
-                if (nodeLocationIndex != -1)
+                string outputStream = ""; //output variable
+                int nodeLocationIndex = FindNode(name); //get location of input node
+                if (nodeLocationIndex != -1) //if node is in the array, continue
                 {
-                    while(minSpanQueue.Count != 0)
+                    //Initial Loop Setup
+                    Node current = nodeArray[nodeLocationIndex]; //set current node to input
+                    current.Visited = true; //set current node to visited
+                    Edge nodeEdgeList = current.GetEdges; //get node's linked list of edges
+                    while (nodeEdgeList != null) //go through the linked list and add edges to queue
                     {
+                        minSpanQueue.Add(nodeEdgeList);
+                        nodeEdgeList = nodeEdgeList.Next;
+                    }
+
+                    //Main Loop
+                    while (minSpanQueue.Count != 0) //repeat loop to add edges while the list is not empty
+                    {
+                        Edge shortestEdge = GetRemoveShortestEdge(ref minSpanQueue); //find the shortest edge to start traversing on
+                        outputStream += nodeArray[shortestEdge.StartIndex].Name;
+                        current = nodeArray[shortestEdge.EndPoint]; //use the endpoint index from the shortest edge and update current node variable (outside of while loop)
                         current.Visited = true;
-                        Edge currentNodeEdges = current.GetEdges;
-                        while (currentNodeEdges != null)
+                        nodeEdgeList = current.GetEdges; //update node edge list
+                        outputStream += "-" + current.Name + " ";
+
+                        //SECOND HALF PROCESSES DATA
+                        while (nodeEdgeList != null) //go through the list of edge's inside the new current node
                         {
-                            minSpanQueue.Add(currentNodeEdges);
-                            currentNodeEdges = currentNodeEdges.Next;
-                        }
-                        Edge shortestEdge = GetRemoveShortestEdge(ref minSpanQueue);
-                        current = nodeArray[shortestEdge.EndPoint];
-                        while (currentNodeEdges != null)
-                        {
-                            int currentEndpoint = currentNodeEdges.EndPoint;
-                            if (nodeArray[currentEndpoint].Visited != true)
+                            bool found = false;
+                            int currentEndpoint = nodeEdgeList.EndPoint;
+                            if (nodeArray[currentEndpoint].Visited != true) //if the desination node has not been visisted
                             {
-                                for(int i = 0; i < minSpanQueue.Count; i++)
+                                for(int i = 0; i < minSpanQueue.Count; i++) //goes through Q and check to see if edges points to the same endpoint already in Q
                                 {
-                                    if(minSpanQueue[i].EndPoint == currentEndpoint)
+                                    if(minSpanQueue[i].EndPoint == currentEndpoint) //if end point in edge equal to Q edge
                                     {
-                                        int currentWeight = currentNodeEdges.Weight;
-                                        if (minSpanQueue[i].Weight > currentWeight)
+                                        int currentWeight = nodeEdgeList.Weight;
+                                        if (minSpanQueue[i].Weight > currentWeight) //if edge weight in Q is more than the current list edge
                                         {
+                                            //remove Q and add current list edge
                                             minSpanQueue.Remove(minSpanQueue[i]);
-                                            minSpanQueue.Add(currentNodeEdges);
+                                            minSpanQueue.Add(nodeEdgeList);
                                         }
+                                        found = true; //marks if a conflict was found and edge added OR if a confluct was found but an edge was NOT added
                                     }
-                                    nodeArray[currentEndpoint].Visited = true;
+                                }
+                                if (found != true)
+                                {
+                                    minSpanQueue.Add(nodeEdgeList);
                                 }
                             }
+                            nodeEdgeList = nodeEdgeList.Next;
+                            found = false;
                         }
-                        ResetFalse();
                     }
-                    for(int i = 0; i < minSpanQueue.Count; i++)
-                    {
-                        outputStream += minSpanQueue[i];
-                    }
+                    ResetFalse();
                     return outputStream;
                 }
                 else

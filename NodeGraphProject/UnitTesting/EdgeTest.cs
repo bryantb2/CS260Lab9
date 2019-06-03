@@ -18,9 +18,9 @@ namespace UnitTesting
         [SetUp]
         public void TestSetup()
         {
-            edge1 = new Edge(2);
-            edge2 = new Edge(3);
-            edge3 = new Edge(4);
+            edge1 = new Edge(1,2);
+            edge2 = new Edge(4,3);
+            edge3 = new Edge(3,4);
         }
 
         [Test]
@@ -29,6 +29,14 @@ namespace UnitTesting
             Assert.AreEqual(2,edge1.EndPoint);
             Assert.AreEqual(3,edge2.EndPoint);
             Assert.AreEqual(4, edge3.EndPoint);
+        }
+
+        [Test]
+        public void TestStartPoint()
+        {
+            Assert.AreEqual(1, edge1.StartIndex);
+            Assert.AreEqual(4, edge2.StartIndex);
+            Assert.AreEqual(3, edge3.StartIndex);
         }
 
         [Test]

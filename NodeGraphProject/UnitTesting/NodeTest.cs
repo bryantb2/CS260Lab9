@@ -42,7 +42,7 @@ namespace UnitTesting
             node1.Visited = true;
             Assert.AreEqual(true, node1.Visited);
         }
-
+        /*
         [Test]
         public void TestAddEdge()
         {
@@ -92,7 +92,7 @@ namespace UnitTesting
             Assert.AreEqual(edge3, linkedList);
             linkedList = linkedList.Next;
             Assert.AreEqual(edge1, linkedList);
-        }
+        }*/
 
 
 

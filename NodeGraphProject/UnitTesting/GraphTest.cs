@@ -156,5 +156,30 @@ namespace UnitTesting
             graph1.AddEdge("node6", "node7");
             Console.WriteLine(graph1.DepthFirst("node1"));
         }
+
+        [Test]
+        public void TestMinimumCostTraversal()
+        {
+            graph1.AddNode("node1");
+            graph1.AddNode("node2");
+            graph1.AddNode("node3");
+            graph1.AddNode("node4");
+            graph1.AddNode("node5");
+            graph1.AddNode("node6");
+            graph1.AddNode("node7");
+            graph1.AddNode("node8");
+
+            //adding edges
+            graph1.AddEdge("node1", "node2",1);
+            graph1.AddEdge("node2", "node3",3);
+            graph1.AddEdge("node2", "node6", 7);
+            graph1.AddEdge("node3", "node4",20);
+            graph1.AddEdge("node4", "node8",8);
+            graph1.AddEdge("node4", "node5",2);
+            graph1.AddEdge("node4", "node6",9);
+            graph1.AddEdge("node6", "node7",11);
+            graph1.AddEdge("node7", "node8", 1);
+            Console.WriteLine(graph1.MinimumCostTraversal("node1"));
+        }
     }
 }
